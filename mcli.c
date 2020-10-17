@@ -704,6 +704,12 @@ void cPluginMcli::Action (void)
 #ifndef REELVDR
 			if (!channel_switch_ok) {	// the first tuner that was found, so make VDR retune to the channel it wants...
 				cChannel *ch = Channels.GetByNumber (cDevice::CurrentChannel ());
+                                #if defined (APIVERSNUM) && (APIVERSNUM >= 20301)
+                                         LOCK_CHANNELS_READ;
+                                         const cChannel *ch = Channels->GetByNumber(1,0);
+                                #else
+                                         cChannel *ch = Channels.GetByNumber (cDevice::CurrentChannel ());
+                                #endif				
 				if (ch) {
 					channel_switch_ok = cDevice::PrimaryDevice ()->SwitchChannel (ch, true);
 				}
